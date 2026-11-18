@@ -1,8 +1,10 @@
 export { API_URL, ApiError, api, setUnauthorizedHandler } from './api';
 export type { FieldErrors } from './api';
+export { accountService } from './account.service';
 export { authService } from './auth.service';
 export { chatService } from './chat.service';
 export { goalsService } from './goals.service';
+export { googleService } from './google.service';
 export { healthService } from './health.service';
 export { memoriesService } from './memories.service';
 export { notificationsService } from './notifications.service';

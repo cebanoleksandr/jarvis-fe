@@ -15,27 +15,46 @@ export class ApiError extends Error {
   readonly status: number;
   /** Present on 400 validation failures. */
   readonly errors?: FieldErrors;
+  /** Machine-readable reason, e.g. `google_reauth_required`. */
+  readonly code?: string;
 
-  constructor(status: number, message: string, errors?: FieldErrors) {
+  constructor(
+    status: number,
+    message: string,
+    errors?: FieldErrors,
+    code?: string,
+  ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.errors = errors;
+    this.code = code;
   }
 
   get isUnauthorized(): boolean {
     return this.status === 401;
   }
+
+  /** Google is not connected, a scope is missing or access was revoked: sign in with Google again. */
+  get isGoogleReauthRequired(): boolean {
+    return this.code === 'google_reauth_required';
+  }
 }
 
-/** Builds an ApiError from a NestJS error body (`{ message, errors? }`). */
+/** Builds an ApiError from a NestJS error body (`{ message, errors?, code? }`). */
 export function toApiError(status: number, body: unknown): ApiError {
   const b = (body && typeof body === 'object' ? body : {}) as {
     message?: string | string[];
     errors?: FieldErrors;
+    code?: string;
   };
   const message = Array.isArray(b.message) ? b.message.join('; ') : b.message;
-  return new ApiError(status, message || `Request failed (${status})`, b.errors);
+  return new ApiError(
+    status,
+    message || `Request failed (${status})`,
+    b.errors,
+    b.code,
+  );
 }
 
 type UnauthorizedHandler = () => void;

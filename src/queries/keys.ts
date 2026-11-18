@@ -11,4 +11,11 @@ export const queryKeys = {
   memories: ['memories'] as const,
   notifications: ['notifications'] as const,
   health: ['health'] as const,
+  /** Prefix of every Google-backed query, to drop them all on disconnect. */
+  calendar: ['calendar'] as const,
+  calendarEvents: (from?: string, to?: string) =>
+    ['calendar', 'events', from ?? 'today', to ?? from ?? 'today'] as const,
+  tasks: (includeCompleted: boolean) =>
+    ['tasks', { includeCompleted }] as const,
+  googleConnection: ['google', 'connection'] as const,
 };

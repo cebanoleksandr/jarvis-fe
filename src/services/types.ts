@@ -90,10 +90,7 @@ export interface OtherBlock {
 }
 
 export type ContentBlock =
-  | TextBlock
-  | ToolUseBlock
-  | ToolResultBlock
-  | OtherBlock;
+  TextBlock | ToolUseBlock | ToolResultBlock | OtherBlock;
 
 export type MessageRole = 'user' | 'assistant';
 
@@ -112,12 +109,7 @@ export interface Message {
 }
 
 export type PendingActionStatus =
-  | 'pending'
-  | 'executing'
-  | 'executed'
-  | 'failed'
-  | 'cancelled'
-  | 'dismissed';
+  'pending' | 'executing' | 'executed' | 'failed' | 'cancelled' | 'dismissed';
 
 export interface ActionSummary {
   title: string;
@@ -175,6 +167,58 @@ export interface NotificationSettings {
 }
 
 export type NotificationSettingsUpdate = Partial<NotificationSettings>;
+
+/** A day range in the user's timezone, `YYYY-MM-DD`, at most 31 days. */
+export interface DateRange {
+  from: string;
+  /** Inclusive; defaults to `from`. */
+  to?: string;
+}
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  /** Local date-time with offset, or `YYYY-MM-DD` for all-day events. */
+  start: string;
+  /** For all-day events: the day after the last one (exclusive). */
+  end: string;
+  allDay: boolean;
+  location?: string;
+  description?: string;
+  /** Opens the event in Google Calendar. */
+  link?: string;
+}
+
+export interface CalendarEventsResponse {
+  timezone: string;
+  /** Ordered by start, at most 100. */
+  events: CalendarEvent[];
+  /** More events exist than were returned. */
+  truncated: boolean;
+}
+
+export interface GoogleTask {
+  id: string;
+  title: string;
+  notes?: string;
+  /** `YYYY-MM-DD`; Google Tasks has no due time. */
+  due?: string;
+  status: 'needsAction' | 'completed';
+  completedAt?: string;
+  link?: string;
+}
+
+export interface TasksResponse {
+  tasks: GoogleTask[];
+  truncated: boolean;
+}
+
+export interface GoogleConnection {
+  connected: boolean;
+  /** Services the user actually granted at sign-in. */
+  services: { calendar: boolean; tasks: boolean };
+  connectedAt: string | null;
+}
 
 export interface Health {
   status: 'ok' | 'error';
