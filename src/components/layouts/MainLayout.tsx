@@ -11,6 +11,7 @@ import { useCurrentUser } from '../../queries';
 import { colors } from '../../theme';
 import { Header } from './Header';
 import { Sidebar, SIDEBAR_WIDTH } from './Sidebar';
+import CustomAlert from '../ui/CustomAlert';
 
 /**
  * App shell for signed-in pages: sidebar on the left, header and the page on
@@ -57,6 +58,8 @@ export default function MainLayout() {
           <Outlet />
         </Box>
       </Box>
+
+      <CustomAlert />
     </Box>
   );
 }
