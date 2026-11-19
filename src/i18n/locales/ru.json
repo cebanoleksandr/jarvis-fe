@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "chat": "Чат",
+    "today": "Сегодня",
+    "goals": "Цели",
+    "memory": "Память"
+  },
+  "pageTitle": {
+    "chat": "Чат",
+    "today": "План на сегодня",
+    "goals": "Цели",
+    "memory": "Память и настройки"
+  },
+  "sidebar": {
+    "newChat": "Новый чат",
+    "recents": "Недавние",
+    "untitledChat": "Новый чат",
+    "goalsActive_one": "{{count}} активная",
+    "goalsActive_few": "{{count}} активные",
+    "goalsActive_many": "{{count}} активных",
+    "goalsActive_other": "{{count}} активных",
+    "notes_one": "{{count}} заметка",
+    "notes_few": "{{count}} заметки",
+    "notes_many": "{{count}} заметок",
+    "notes_other": "{{count}} заметки",
+    "accountMenu": "Меню аккаунта",
+    "settings": "Настройки",
+    "logout": "Выйти"
+  },
+  "header": {
+    "openNavigation": "Открыть навигацию",
+    "breadcrumb": "Навигационная цепочка"
+  },
+  "status": {
+    "pending": "Подключение",
+    "ok": "Система готова",
+    "down": "Сбои в системе"
+  },
+  "language": {
+    "label": "Язык"
+  },
+  "footer": {
+    "privacy": "Конфиденциальность",
+    "terms": "Условия"
+  },
+  "chat": {
+    "empty": "Начните новый чат на боковой панели.",
+    "conversation": "Разговор {{id}}"
+  },
+  "login": {
+    "title": "Ваш персональный ассистент",
+    "subtitle": "Планирует ваши цели, управляет календарём и задачами.",
+    "continue": "Продолжить с Google",
+    "redirecting": "Переходим в Google…",
+    "errors": {
+      "access_denied": "Вход отменён. Чтобы планировать ваш день, нужен доступ к Google Calendar и Google Tasks.",
+      "default": "Не удалось войти через Google. Попробуйте ещё раз."
+    },
+    "scopesHeader": "OAuth 2.0 / Чтение и запись",
+    "accessRequested": "Запрашиваемый доступ",
+    "calendarDetail": "Расписание и занятость",
+    "tasksDetail": "Приоритеты и задачи",
+    "noChanges": "Ничего не меняется без вашего подтверждения. <strong>Отключить доступ можно в любой момент</strong> в настройках аккаунта.",
+    "tokensEncrypted": "Токены Google хранятся в зашифрованном виде",
+    "build": "Сборка {{version}}",
+    "orb": "Ядро ассистента {{version}} // инициализировано",
+    "privacyQuestion": "Хотите знать, как используются ваши данные?",
+    "privacyLink": "Политика конфиденциальности"
+  }
+}

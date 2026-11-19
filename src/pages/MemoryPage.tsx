@@ -1,5 +1,8 @@
+import { useTranslation } from 'react-i18next';
+
 import { PagePlaceholder } from './PagePlaceholder';
 
 export default function MemoryPage() {
-  return <PagePlaceholder title="Memory" />;
+  const { t } = useTranslation();
+  return <PagePlaceholder title={t('pageTitle.memory')} />;
 }

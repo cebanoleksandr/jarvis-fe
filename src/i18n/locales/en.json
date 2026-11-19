@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "chat": "Chat",
+    "today": "Today",
+    "goals": "Goals",
+    "memory": "Memory"
+  },
+  "pageTitle": {
+    "chat": "Chat",
+    "today": "Today's Agenda",
+    "goals": "Goals",
+    "memory": "Memory & Settings"
+  },
+  "sidebar": {
+    "newChat": "New chat",
+    "recents": "Recents",
+    "untitledChat": "New chat",
+    "goalsActive_one": "{{count}} active",
+    "goalsActive_other": "{{count}} active",
+    "notes_one": "{{count}} note",
+    "notes_other": "{{count}} notes",
+    "accountMenu": "Account menu",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "header": {
+    "openNavigation": "Open navigation",
+    "breadcrumb": "Breadcrumb"
+  },
+  "status": {
+    "pending": "Connecting",
+    "ok": "System ready",
+    "down": "System degraded"
+  },
+  "language": {
+    "label": "Language"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms"
+  },
+  "chat": {
+    "empty": "Start a new chat from the sidebar.",
+    "conversation": "Conversation {{id}}"
+  },
+  "login": {
+    "title": "Your personal assistant",
+    "subtitle": "Plans your goals, manages your calendar and tasks.",
+    "continue": "Continue with Google",
+    "redirecting": "Redirecting to Google…",
+    "errors": {
+      "access_denied": "Sign-in was cancelled. Access to Google Calendar and Tasks is needed to plan your day.",
+      "default": "Signing in with Google failed. Please try again."
+    },
+    "scopesHeader": "OAuth 2.0 / Read & write scopes",
+    "accessRequested": "Access requested",
+    "calendarDetail": "Schedule & Availability",
+    "tasksDetail": "Priorities & Action Items",
+    "noChanges": "Nothing is changed without your confirmation. <strong>You can disconnect anytime</strong> from your account settings.",
+    "tokensEncrypted": "Google tokens encrypted at rest",
+    "build": "Build {{version}}",
+    "orb": "Assistant core {{version}} // initialized",
+    "privacyQuestion": "Want to know how your data is used?",
+    "privacyLink": "Privacy policy"
+  }
+}

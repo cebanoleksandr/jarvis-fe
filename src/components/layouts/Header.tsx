@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useMatches } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -7,13 +8,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { APP_NAME } from '../../constants';
 import { colors } from '../../theme';
+import type en from '../../i18n/locales/en.json';
+import { LanguageSwitcher } from '../business/LanguageSwitcher';
 import { SystemStatus } from '../business/SystemStatus';
 
 export const HEADER_HEIGHT = 56;
 
-/** Set on a route as `handle: { title: 'Today' }` to fill the breadcrumb. */
+/** Set on a route as `handle: { title: 'today' }` to fill the breadcrumb from `pageTitle.*`. */
 export interface RouteHandle {
-  title?: string;
+  title?: keyof typeof en.pageTitle;
 }
 
 interface HeaderProps {
@@ -22,6 +25,7 @@ interface HeaderProps {
 }
 
 export function Header({ onMenuClick }: HeaderProps) {
+  const { t } = useTranslation();
   const title = useMatches()
     .map((m) => (m.handle as RouteHandle | undefined)?.title)
     .filter(Boolean)
@@ -48,7 +52,7 @@ export function Header({ onMenuClick }: HeaderProps) {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
         {onMenuClick && (
           <IconButton
-            aria-label="Open navigation"
+            aria-label={t('header.openNavigation')}
             onClick={onMenuClick}
             size="small"
             sx={{
@@ -62,7 +66,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         )}
         <Box
           component="nav"
-          aria-label="Breadcrumb"
+          aria-label={t('header.breadcrumb')}
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -88,12 +92,15 @@ export function Header({ onMenuClick }: HeaderProps) {
               textOverflow: 'ellipsis',
             }}
           >
-            {title}
+            {title && t(`pageTitle.${title}`)}
           </Box>
         </Box>
       </Box>
 
-      <SystemStatus />
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <SystemStatus />
+        <LanguageSwitcher />
+      </Box>
     </Box>
   );
 }

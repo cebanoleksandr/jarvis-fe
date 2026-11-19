@@ -1,4 +1,5 @@
 import { useEffect, useState, type ComponentType } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink, useMatch, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -59,6 +60,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onNavigate }: SidebarProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const createConversation = useCreateConversation();
   const { data: goals } = useGoals();
@@ -69,19 +71,24 @@ export function Sidebar({ onNavigate }: SidebarProps) {
   ).length;
 
   const nav: NavItem[] = [
-    { to: '/chat', label: 'Chat', Icon: ChatBubbleOutlineOutlinedIcon },
-    { to: '/today', label: 'Today', Icon: CalendarTodayOutlinedIcon },
+    { to: '/chat', label: t('nav.chat'), Icon: ChatBubbleOutlineOutlinedIcon },
+    { to: '/today', label: t('nav.today'), Icon: CalendarTodayOutlinedIcon },
     {
       to: '/goals',
-      label: 'Goals',
+      label: t('nav.goals'),
       Icon: FlagOutlinedIcon,
-      badge: activeGoals !== undefined ? `${activeGoals} active` : undefined,
+      badge:
+        activeGoals !== undefined
+          ? t('sidebar.goalsActive', { count: activeGoals })
+          : undefined,
     },
     {
       to: '/memory',
-      label: 'Memory',
+      label: t('nav.memory'),
       Icon: PsychologyOutlinedIcon,
-      badge: memories ? `${memories.length} notes` : undefined,
+      badge: memories
+        ? t('sidebar.notes', { count: memories.length })
+        : undefined,
     },
   ];
 
@@ -202,7 +209,7 @@ export function Sidebar({ onNavigate }: SidebarProps) {
                 color: colors.text,
               }}
             >
-              New chat
+              {t('sidebar.newChat')}
             </Box>
           </Box>
           <Kbd>{isMac ? '⌘K' : 'Ctrl K'}</Kbd>
@@ -303,6 +310,7 @@ function NavRow({
 }
 
 function Recents({ onNavigate }: { onNavigate?: () => void }) {
+  const { t } = useTranslation();
   const { data: conversations } = useConversations();
   const activeId = useMatch('/chat/:conversationId')?.params.conversationId;
 
@@ -329,7 +337,7 @@ function Recents({ onNavigate }: { onNavigate?: () => void }) {
           color: colors.textSecondary,
         }}
       >
-        Recents
+        {t('sidebar.recents')}
       </Box>
       <Box
         sx={{
@@ -376,7 +384,7 @@ function Recents({ onNavigate }: { onNavigate?: () => void }) {
                 }),
               }}
             >
-              {c.title ?? 'New chat'}
+              {c.title ?? t('sidebar.untitledChat')}
             </Box>
           );
         })}
@@ -392,6 +400,7 @@ function initials(name: string | null, email: string) {
 }
 
 function ProfileCard() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: user } = useCurrentUser();
   const logout = useLogout();
@@ -470,7 +479,7 @@ function ProfileCard() {
         </Box>
         <IconButton
           size="small"
-          aria-label="Account menu"
+          aria-label={t('sidebar.accountMenu')}
           onClick={(e) => setAnchor(e.currentTarget)}
           sx={{
             color: colors.textSecondary,
@@ -497,7 +506,7 @@ function ProfileCard() {
           <ListItemIcon>
             <SettingsOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          Settings
+          {t('sidebar.settings')}
         </MenuItem>
         <MenuItem
           disabled={logout.isPending}
@@ -508,7 +517,7 @@ function ProfileCard() {
           <ListItemIcon>
             <LogoutOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          Log out
+          {t('sidebar.logout')}
         </MenuItem>
       </Menu>
     </Box>

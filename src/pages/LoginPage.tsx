@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 
 import Alert from '@mui/material/Alert';
@@ -22,24 +23,23 @@ const CYAN = palette.primary.base;
 /** Google button fill from the Figma card; not part of the token scales. */
 const GOOGLE_BUTTON_BG = '#353940';
 
-/** What the backend puts in `?error=` when the Google callback fails. */
-const ERROR_MESSAGES: Record<string, string> = {
-  access_denied:
-    'Sign-in was cancelled. Access to Google Calendar and Tasks is needed to plan your day.',
-};
-const DEFAULT_ERROR = 'Signing in with Google failed. Please try again.';
+/** Message for `?error=` set by the backend when the Google callback fails. */
+const errorKey = (error: string) =>
+  error === 'access_denied'
+    ? 'login.errors.access_denied'
+    : 'login.errors.default';
 
 /** Must match GOOGLE_SCOPES on the backend (calendar.events, tasks). */
 const PERMISSIONS = [
   {
     icon: calendarIcon,
     label: 'Google Calendar',
-    detail: 'Schedule & Availability',
+    detailKey: 'login.calendarDetail',
   },
   {
     icon: taskCheckIcon,
     label: 'Google Tasks',
-    detail: 'Priorities & Action Items',
+    detailKey: 'login.tasksDetail',
   },
 ] as const;
 
@@ -58,6 +58,7 @@ const pulse = keyframes`
 
 /** Glass sign-in card: orb, Google button, the access being requested, error from the callback. */
 export default function LoginPage() {
+  const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const error = params.get('error');
   const [redirecting, setRedirecting] = useState(false);
@@ -112,7 +113,7 @@ export default function LoginPage() {
               color: colors.textStrong,
             }}
           >
-            Your personal assistant
+            {t('login.title')}
           </Box>
           <Box
             component="p"
@@ -126,13 +127,11 @@ export default function LoginPage() {
               color: colors.textMuted,
             }}
           >
-            Plans your goals, manages your calendar and tasks.
+            {t('login.subtitle')}
           </Box>
         </Box>
 
-        <Box
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2.5 }}
-        >
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2.5 }}>
           {error && (
             <Alert
               severity="error"
@@ -140,7 +139,7 @@ export default function LoginPage() {
               onClose={() => setParams({}, { replace: true })}
               sx={{ borderRadius: `${radius.md}px`, fontSize: 13 }}
             >
-              {ERROR_MESSAGES[error] ?? DEFAULT_ERROR}
+              {t(errorKey(error))}
             </Alert>
           )}
 
@@ -179,7 +178,7 @@ export default function LoginPage() {
                     color: colors.textSecondary,
                   }}
                 >
-                  OAuth 2.0 / Read &amp; write scopes
+                  {t('login.scopesHeader')}
                 </Box>
               </Box>
               <Box
@@ -203,7 +202,7 @@ export default function LoginPage() {
 
             <Box
               component="ul"
-              aria-label="Access requested"
+              aria-label={t('login.accessRequested')}
               sx={{
                 m: 0,
                 p: 0,
@@ -258,7 +257,7 @@ export default function LoginPage() {
                       color: colors.textSecondary,
                     }}
                   >
-                    {p.detail}
+                    {t(p.detailKey)}
                   </Box>
                 </Box>
               ))}
@@ -286,9 +285,7 @@ export default function LoginPage() {
                   '& strong': { fontWeight: 500, color: colors.text },
                 }}
               >
-                Nothing is changed without your confirmation.{' '}
-                <strong>You can disconnect anytime</strong> from your account
-                settings.
+                <Trans i18nKey="login.noChanges" />
               </Box>
             </Box>
           </Box>
@@ -312,9 +309,10 @@ export default function LoginPage() {
                 ...monoLabel,
                 letterSpacing: '0.6px',
                 color: alpha(colors.textSecondary, 0.6),
+                textTransform: 'uppercase',
               }}
             >
-              GOOGLE TOKENS ENCRYPTED AT REST
+              {t('login.tokensEncrypted')}
             </Box>
           </Box>
           <Box
@@ -325,7 +323,7 @@ export default function LoginPage() {
               color: alpha(colors.textSecondary, 0.6),
             }}
           >
-            BUILD {APP_VERSION.toUpperCase()}
+            {t('login.build', { version: APP_VERSION }).toUpperCase()}
           </Box>
         </Box>
       </Box>
@@ -340,7 +338,7 @@ export default function LoginPage() {
           color: alpha(colors.textSecondary, 0.7),
         }}
       >
-        Want to know how your data is used?{' '}
+        {t('login.privacyQuestion')}{' '}
         <Box
           component={RouterLink}
           to="/privacy"
@@ -351,7 +349,7 @@ export default function LoginPage() {
             '&:hover': { textDecoration: 'underline' },
           }}
         >
-          Privacy policy
+          {t('login.privacyLink')}
         </Box>
       </Box>
     </Box>
@@ -365,6 +363,7 @@ function GoogleButton({
   loading: boolean;
   onClick: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <ButtonBase
       onClick={onClick}
@@ -415,7 +414,7 @@ function GoogleButton({
       >
         <img src={googleGIcon} alt="" />
       </Box>
-      <span>{loading ? 'Redirecting to Google…' : 'Continue with Google'}</span>
+      <span>{loading ? t('login.redirecting') : t('login.continue')}</span>
       <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center' }}>
         {loading ? (
           <CircularProgress size={12} thickness={5} sx={{ color: CYAN }} />
@@ -434,6 +433,7 @@ function GoogleButton({
 
 /** Decorative assistant orb: aura, rotating dashed ring, orbit ring, glowing core. */
 function Orb() {
+  const { t } = useTranslation();
   const ring = { position: 'absolute', borderRadius: '50%' } as const;
 
   return (
@@ -550,7 +550,7 @@ function Orb() {
           color: alpha(colors.accentText, 0.8),
         }}
       >
-        Assistant core {APP_VERSION} // initialized
+        {t('login.orb', { version: APP_VERSION })}
       </Box>
     </Box>
   );

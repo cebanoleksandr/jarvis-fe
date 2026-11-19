@@ -1,0 +1,6 @@
+{
+  // Use the project's TypeScript (~6.0), not the one bundled with VS Code (5.8):
+  // the i18next key types only resolve correctly on the project version.
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
+}

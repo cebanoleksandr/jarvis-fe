@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, Navigate, Outlet } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -7,6 +8,7 @@ import verticalDivider from '../../assets/auth-vertical-divider.png';
 import { APP_NAME, APP_VERSION } from '../../constants';
 import { useCurrentUser } from '../../queries';
 import { colors, fonts, palette } from '../../theme';
+import { LanguageSwitcher } from '../business/LanguageSwitcher';
 import { SystemStatus } from '../business/SystemStatus';
 import { StatusDot } from '../ui/StatusDot';
 import { FullScreenLoader } from './MainLayout';
@@ -33,6 +35,7 @@ const innerSx = {
 
 /** Sign-in shell: brand header, ambient HUD background, centered card slot, legal footer. */
 export default function AuthLayout() {
+  const { t } = useTranslation();
   const { data: user, isPending } = useCurrentUser();
 
   if (isPending) return <FullScreenLoader />;
@@ -98,7 +101,10 @@ export default function AuthLayout() {
               {`${APP_VERSION} // AUTH`}
             </Box>
           </Box>
-          <SystemStatus />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <SystemStatus />
+            <LanguageSwitcher />
+          </Box>
         </Box>
       </Box>
 
@@ -176,8 +182,8 @@ export default function AuthLayout() {
             }}
           >
             {[
-              { to: '/privacy', label: 'Privacy' },
-              { to: '/terms', label: 'Terms' },
+              { to: '/privacy', label: t('footer.privacy') },
+              { to: '/terms', label: t('footer.terms') },
             ].map((link) => (
               <Box
                 key={link.to}

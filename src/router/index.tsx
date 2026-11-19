@@ -24,27 +24,27 @@ export const routes: RouteObject[] = [
       {
         path: 'chat',
         Component: ChatPage,
-        handle: { title: 'Chat' } satisfies RouteHandle,
+        handle: { title: 'chat' } satisfies RouteHandle,
       },
       {
         path: 'chat/:conversationId',
         Component: ChatPage,
-        handle: { title: 'Chat' } satisfies RouteHandle,
+        handle: { title: 'chat' } satisfies RouteHandle,
       },
       {
         path: 'today',
         Component: TodayPage,
-        handle: { title: "Today's Agenda" } satisfies RouteHandle,
+        handle: { title: 'today' } satisfies RouteHandle,
       },
       {
         path: 'goals',
         Component: GoalsPage,
-        handle: { title: 'Goals' } satisfies RouteHandle,
+        handle: { title: 'goals' } satisfies RouteHandle,
       },
       {
         path: 'memory',
         Component: MemoryPage,
-        handle: { title: 'Memory & Settings' } satisfies RouteHandle,
+        handle: { title: 'memory' } satisfies RouteHandle,
       },
     ],
   },

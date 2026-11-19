@@ -1,0 +1,68 @@
+{
+  "nav": {
+    "chat": "Chat",
+    "today": "Hoy",
+    "goals": "Objetivos",
+    "memory": "Memoria"
+  },
+  "pageTitle": {
+    "chat": "Chat",
+    "today": "Agenda de hoy",
+    "goals": "Objetivos",
+    "memory": "Memoria y ajustes"
+  },
+  "sidebar": {
+    "newChat": "Nuevo chat",
+    "recents": "Recientes",
+    "untitledChat": "Nuevo chat",
+    "goalsActive_one": "{{count}} activo",
+    "goalsActive_many": "{{count}} activos",
+    "goalsActive_other": "{{count}} activos",
+    "notes_one": "{{count}} nota",
+    "notes_many": "{{count}} notas",
+    "notes_other": "{{count}} notas",
+    "accountMenu": "Menú de la cuenta",
+    "settings": "Ajustes",
+    "logout": "Cerrar sesión"
+  },
+  "header": {
+    "openNavigation": "Abrir navegación",
+    "breadcrumb": "Ruta de navegación"
+  },
+  "status": {
+    "pending": "Conectando",
+    "ok": "Sistema listo",
+    "down": "Sistema con incidencias"
+  },
+  "language": {
+    "label": "Idioma"
+  },
+  "footer": {
+    "privacy": "Privacidad",
+    "terms": "Términos"
+  },
+  "chat": {
+    "empty": "Inicia un nuevo chat desde la barra lateral.",
+    "conversation": "Conversación {{id}}"
+  },
+  "login": {
+    "title": "Tu asistente personal",
+    "subtitle": "Planifica tus objetivos y gestiona tu calendario y tus tareas.",
+    "continue": "Continuar con Google",
+    "redirecting": "Redirigiendo a Google…",
+    "errors": {
+      "access_denied": "Inicio de sesión cancelado. Para planificar tu día se necesita acceso a Google Calendar y Google Tasks.",
+      "default": "No se pudo iniciar sesión con Google. Inténtalo de nuevo."
+    },
+    "scopesHeader": "OAuth 2.0 / Lectura y escritura",
+    "accessRequested": "Acceso solicitado",
+    "calendarDetail": "Agenda y disponibilidad",
+    "tasksDetail": "Prioridades y tareas",
+    "noChanges": "Nada cambia sin tu confirmación. <strong>Puedes desconectarlo cuando quieras</strong> en los ajustes de tu cuenta.",
+    "tokensEncrypted": "Los tokens de Google se guardan cifrados",
+    "build": "Versión {{version}}",
+    "orb": "Núcleo del asistente {{version}} // inicializado",
+    "privacyQuestion": "¿Quieres saber cómo se usan tus datos?",
+    "privacyLink": "Política de privacidad"
+  }
+}

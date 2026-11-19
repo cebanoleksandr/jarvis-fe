@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "chat": "Чат",
+    "today": "Сьогодні",
+    "goals": "Цілі",
+    "memory": "Пам'ять"
+  },
+  "pageTitle": {
+    "chat": "Чат",
+    "today": "План на сьогодні",
+    "goals": "Цілі",
+    "memory": "Пам'ять і налаштування"
+  },
+  "sidebar": {
+    "newChat": "Новий чат",
+    "recents": "Нещодавні",
+    "untitledChat": "Новий чат",
+    "goalsActive_one": "{{count}} активна",
+    "goalsActive_few": "{{count}} активні",
+    "goalsActive_many": "{{count}} активних",
+    "goalsActive_other": "{{count}} активних",
+    "notes_one": "{{count}} нотатка",
+    "notes_few": "{{count}} нотатки",
+    "notes_many": "{{count}} нотаток",
+    "notes_other": "{{count}} нотатки",
+    "accountMenu": "Меню акаунта",
+    "settings": "Налаштування",
+    "logout": "Вийти"
+  },
+  "header": {
+    "openNavigation": "Відкрити навігацію",
+    "breadcrumb": "Навігаційний ланцюжок"
+  },
+  "status": {
+    "pending": "Підключення",
+    "ok": "Система готова",
+    "down": "Збої в системі"
+  },
+  "language": {
+    "label": "Мова"
+  },
+  "footer": {
+    "privacy": "Конфіденційність",
+    "terms": "Умови"
+  },
+  "chat": {
+    "empty": "Почніть новий чат на бічній панелі.",
+    "conversation": "Розмова {{id}}"
+  },
+  "login": {
+    "title": "Ваш персональний асистент",
+    "subtitle": "Планує ваші цілі, керує календарем і задачами.",
+    "continue": "Продовжити з Google",
+    "redirecting": "Переходимо до Google…",
+    "errors": {
+      "access_denied": "Вхід скасовано. Щоб планувати ваш день, потрібен доступ до Google Calendar і Google Tasks.",
+      "default": "Не вдалося увійти через Google. Спробуйте ще раз."
+    },
+    "scopesHeader": "OAuth 2.0 / Читання та запис",
+    "accessRequested": "Запитуваний доступ",
+    "calendarDetail": "Розклад і зайнятість",
+    "tasksDetail": "Пріоритети та задачі",
+    "noChanges": "Нічого не змінюється без вашого підтвердження. <strong>Відключити доступ можна будь-коли</strong> в налаштуваннях акаунта.",
+    "tokensEncrypted": "Токени Google зберігаються зашифрованими",
+    "build": "Збірка {{version}}",
+    "orb": "Ядро асистента {{version}} // ініціалізовано",
+    "privacyQuestion": "Хочете знати, як використовуються ваші дані?",
+    "privacyLink": "Політика конфіденційності"
+  }
+}

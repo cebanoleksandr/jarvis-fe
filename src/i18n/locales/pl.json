@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "chat": "Czat",
+    "today": "Dzisiaj",
+    "goals": "Cele",
+    "memory": "Pamięć"
+  },
+  "pageTitle": {
+    "chat": "Czat",
+    "today": "Plan na dziś",
+    "goals": "Cele",
+    "memory": "Pamięć i ustawienia"
+  },
+  "sidebar": {
+    "newChat": "Nowy czat",
+    "recents": "Ostatnie",
+    "untitledChat": "Nowy czat",
+    "goalsActive_one": "{{count}} aktywny",
+    "goalsActive_few": "{{count}} aktywne",
+    "goalsActive_many": "{{count}} aktywnych",
+    "goalsActive_other": "{{count}} aktywnego",
+    "notes_one": "{{count}} notatka",
+    "notes_few": "{{count}} notatki",
+    "notes_many": "{{count}} notatek",
+    "notes_other": "{{count}} notatki",
+    "accountMenu": "Menu konta",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj się"
+  },
+  "header": {
+    "openNavigation": "Otwórz nawigację",
+    "breadcrumb": "Ścieżka nawigacji"
+  },
+  "status": {
+    "pending": "Łączenie",
+    "ok": "System gotowy",
+    "down": "Zakłócenia systemu"
+  },
+  "language": {
+    "label": "Język"
+  },
+  "footer": {
+    "privacy": "Prywatność",
+    "terms": "Regulamin"
+  },
+  "chat": {
+    "empty": "Rozpocznij nowy czat z panelu bocznego.",
+    "conversation": "Rozmowa {{id}}"
+  },
+  "login": {
+    "title": "Twój osobisty asystent",
+    "subtitle": "Planuje Twoje cele, zarządza kalendarzem i zadaniami.",
+    "continue": "Kontynuuj z Google",
+    "redirecting": "Przekierowanie do Google…",
+    "errors": {
+      "access_denied": "Logowanie anulowane. Do planowania dnia potrzebny jest dostęp do Google Calendar i Google Tasks.",
+      "default": "Nie udało się zalogować przez Google. Spróbuj ponownie."
+    },
+    "scopesHeader": "OAuth 2.0 / Odczyt i zapis",
+    "accessRequested": "Wymagany dostęp",
+    "calendarDetail": "Harmonogram i dostępność",
+    "tasksDetail": "Priorytety i zadania",
+    "noChanges": "Nic nie zmienia się bez Twojego potwierdzenia. <strong>Dostęp możesz odłączyć w każdej chwili</strong> w ustawieniach konta.",
+    "tokensEncrypted": "Tokeny Google są przechowywane w postaci zaszyfrowanej",
+    "build": "Wersja {{version}}",
+    "orb": "Rdzeń asystenta {{version}} // zainicjowany",
+    "privacyQuestion": "Chcesz wiedzieć, jak wykorzystujemy Twoje dane?",
+    "privacyLink": "Polityka prywatności"
+  }
+}
