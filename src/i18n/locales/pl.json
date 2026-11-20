@@ -44,8 +44,21 @@
     "terms": "Regulamin"
   },
   "chat": {
-    "empty": "Rozpocznij nowy czat z panelu bocznego.",
-    "conversation": "Rozmowa {{id}}"
+    "placeholder": "Zapytaj o cokolwiek lub opowiedz o swoim celu…",
+    "send": "Wyślij",
+    "stop": "Zatrzymaj odpowiedź",
+    "disclaimer": "Asystent może się mylić. Zmiany w kalendarzu wymagają potwierdzenia.",
+    "emptyTitle": "W czym mogę dziś pomóc?",
+    "emptySubtitle": "Zapytaj o harmonogram, zaplanuj cel lub dodaj zadanie.",
+    "notFound": "Ten czat już nie istnieje.",
+    "startNew": "Rozpocznij nowy czat",
+    "loadFailed": "Nie udało się wczytać wiadomości.",
+    "retry": "Spróbuj ponownie",
+    "stopped": "Zatrzymano",
+    "thinking": "Myślę…",
+    "failed": "Coś poszło nie tak: {{message}}",
+    "briefingPending": "Przygotowuję Twój briefing…",
+    "assistant": "Asystent"
   },
   "login": {
     "title": "Twój osobisty asystent",
@@ -66,5 +79,22 @@
     "orb": "Rdzeń asystenta {{version}} // zainicjowany",
     "privacyQuestion": "Chcesz wiedzieć, jak wykorzystujemy Twoje dane?",
     "privacyLink": "Polityka prywatności"
+  },
+  "logoutDialog": {
+    "title": "Wylogować się?",
+    "text": "Aby kontynuować, trzeba będzie ponownie zalogować się przez Google.",
+    "cancel": "Anuluj",
+    "confirm": "Wyloguj się"
+  },
+  "action": {
+    "required": "Prośba o działanie · Wymaga zatwierdzenia",
+    "executing": "W toku…",
+    "executed": "Wykonano",
+    "failed": "Błąd",
+    "cancelled": "Anulowano",
+    "dismissed": "Odrzucono",
+    "confirm": "Zatwierdź",
+    "cancel": "Anuluj",
+    "awaiting": "Czeka na zatwierdzenie"
   }
 }

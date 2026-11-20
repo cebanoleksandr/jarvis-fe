@@ -40,8 +40,21 @@
     "terms": "Terms"
   },
   "chat": {
-    "empty": "Start a new chat from the sidebar.",
-    "conversation": "Conversation {{id}}"
+    "placeholder": "Ask me anything or tell me about your goal…",
+    "send": "Send",
+    "stop": "Stop generating",
+    "disclaimer": "Assistant can make mistakes. Changes to your calendar require confirmation.",
+    "emptyTitle": "How can I help today?",
+    "emptySubtitle": "Ask about your schedule, plan a goal or add a task.",
+    "notFound": "This chat no longer exists.",
+    "startNew": "Start a new chat",
+    "loadFailed": "Couldn't load the messages.",
+    "retry": "Retry",
+    "stopped": "Stopped",
+    "thinking": "Thinking…",
+    "failed": "Something went wrong: {{message}}",
+    "briefingPending": "Preparing your briefing…",
+    "assistant": "Assistant"
   },
   "login": {
     "title": "Your personal assistant",
@@ -62,5 +75,22 @@
     "orb": "Assistant core {{version}} // initialized",
     "privacyQuestion": "Want to know how your data is used?",
     "privacyLink": "Privacy policy"
+  },
+  "logoutDialog": {
+    "title": "Log out?",
+    "text": "You will need to sign in with Google again to continue.",
+    "cancel": "Cancel",
+    "confirm": "Log out"
+  },
+  "action": {
+    "required": "Action request · Requires approval",
+    "executing": "Running…",
+    "executed": "Done",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "dismissed": "Dismissed",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "awaiting": "Awaiting confirmation"
   }
 }

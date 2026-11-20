@@ -42,8 +42,21 @@
     "terms": "Términos"
   },
   "chat": {
-    "empty": "Inicia un nuevo chat desde la barra lateral.",
-    "conversation": "Conversación {{id}}"
+    "placeholder": "Pregúntame lo que quieras o cuéntame tu objetivo…",
+    "send": "Enviar",
+    "stop": "Detener respuesta",
+    "disclaimer": "El asistente puede cometer errores. Los cambios en tu calendario requieren confirmación.",
+    "emptyTitle": "¿En qué puedo ayudarte hoy?",
+    "emptySubtitle": "Pregunta por tu agenda, planifica un objetivo o añade una tarea.",
+    "notFound": "Este chat ya no existe.",
+    "startNew": "Iniciar un nuevo chat",
+    "loadFailed": "No se pudieron cargar los mensajes.",
+    "retry": "Reintentar",
+    "stopped": "Detenido",
+    "thinking": "Pensando…",
+    "failed": "Algo salió mal: {{message}}",
+    "briefingPending": "Preparando tu resumen…",
+    "assistant": "Asistente"
   },
   "login": {
     "title": "Tu asistente personal",
@@ -64,5 +77,22 @@
     "orb": "Núcleo del asistente {{version}} // inicializado",
     "privacyQuestion": "¿Quieres saber cómo se usan tus datos?",
     "privacyLink": "Política de privacidad"
+  },
+  "logoutDialog": {
+    "title": "¿Cerrar sesión?",
+    "text": "Para continuar, tendrás que volver a iniciar sesión con Google.",
+    "cancel": "Cancelar",
+    "confirm": "Cerrar sesión"
+  },
+  "action": {
+    "required": "Solicitud de acción · Requiere aprobación",
+    "executing": "En curso…",
+    "executed": "Hecho",
+    "failed": "Error",
+    "cancelled": "Cancelado",
+    "dismissed": "Descartado",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "awaiting": "Pendiente de confirmación"
   }
 }

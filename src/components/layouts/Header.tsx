@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useMatches } from 'react-router-dom';
+import { useMatch, useMatches } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -7,6 +7,7 @@ import { alpha } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { APP_NAME } from '../../constants';
+import { useConversations } from '../../queries';
 import { colors } from '../../theme';
 import type en from '../../i18n/locales/en.json';
 import { LanguageSwitcher } from '../business/LanguageSwitcher';
@@ -30,6 +31,13 @@ export function Header({ onMenuClick }: HeaderProps) {
     .map((m) => (m.handle as RouteHandle | undefined)?.title)
     .filter(Boolean)
     .at(-1);
+  // In a conversation the breadcrumb shows its title instead of "Chat".
+  const chatId = useMatch('/chat/:conversationId')?.params.conversationId;
+  const { data: conversations } = useConversations();
+  const chatTitle = chatId
+    ? (conversations?.find((c) => c.id === chatId)?.title ??
+      t('sidebar.untitledChat'))
+    : null;
 
   return (
     <Box
@@ -92,7 +100,7 @@ export function Header({ onMenuClick }: HeaderProps) {
               textOverflow: 'ellipsis',
             }}
           >
-            {title && t(`pageTitle.${title}`)}
+            {chatTitle ?? (title && t(`pageTitle.${title}`))}
           </Box>
         </Box>
       </Box>

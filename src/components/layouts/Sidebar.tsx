@@ -24,11 +24,11 @@ import {
   useCreateConversation,
   useCurrentUser,
   useGoals,
-  useLogout,
   useMemories,
 } from '../../queries';
 import { colors, fonts, palette } from '../../theme';
 import { Kbd } from '../ui/Kbd';
+import LogoutPopup from '../popups/LogoutPopup';
 import { StatusDot } from '../ui/StatusDot';
 
 export const SIDEBAR_WIDTH = 260;
@@ -403,8 +403,8 @@ function ProfileCard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: user } = useCurrentUser();
-  const logout = useLogout();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
+  const [confirmLogout, setConfirmLogout] = useState(false);
 
   if (!user) return null;
 
@@ -509,10 +509,10 @@ function ProfileCard() {
           {t('sidebar.settings')}
         </MenuItem>
         <MenuItem
-          disabled={logout.isPending}
-          onClick={() =>
-            logout.mutate(undefined, { onSettled: () => navigate('/login') })
-          }
+          onClick={() => {
+            setAnchor(null);
+            setConfirmLogout(true);
+          }}
         >
           <ListItemIcon>
             <LogoutOutlinedIcon fontSize="small" />
@@ -520,6 +520,11 @@ function ProfileCard() {
           {t('sidebar.logout')}
         </MenuItem>
       </Menu>
+
+      <LogoutPopup
+        isVisible={confirmLogout}
+        onClose={() => setConfirmLogout(false)}
+      />
     </Box>
   );
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import {
   chatService,
@@ -61,26 +61,20 @@ export function useChatStream(conversationId: string | undefined) {
   const [stream, setStream] = useState<
     ChatStreamState & { conversationId?: string }
   >(IDLE);
-  // Identifies the run whose events may update local state.
-  const runRef = useRef<object | null>(null);
+  // The run whose events may update local state. Starting a run in another
+  // conversation replaces it, which detaches the old one (it still finishes
+  // on the server and refreshes the caches). No unmount cleanup on purpose:
+  // StrictMode's simulated remount would detach a run that just started.
+  const runRef = useRef<{ convId: string } | null>(null);
   const abortRef = useRef<AbortController | null>(null);
-
-  // Detach from a running stream when the conversation changes or on unmount.
-  useEffect(
-    () => () => {
-      runRef.current = null;
-      abortRef.current = null;
-    },
-    [conversationId],
-  );
 
   const run = useCallback(
     async (
       convId: string,
       start: (signal: AbortSignal) => AsyncGenerator<AgentEvent>,
     ) => {
-      if (runRef.current) return; // one reply at a time
-      const runId = {};
+      if (runRef.current?.convId === convId) return; // one reply at a time
+      const runId = { convId };
       const ctrl = new AbortController();
       runRef.current = runId;
       abortRef.current = ctrl;
@@ -171,7 +165,7 @@ export function useChatStream(conversationId: string | undefined) {
 
   const send = useCallback(
     (text: string) => {
-      if (!conversationId || runRef.current) return;
+      if (!conversationId || runRef.current?.convId === conversationId) return;
       queryClient.setQueryData<Message[]>(
         queryKeys.messages(conversationId),
         (old = []) => [

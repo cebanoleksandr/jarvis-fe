@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { ParseKeys } from 'i18next';
 
 interface AlertState {
-  /** A translation key from src/i18n/locales/en.json; '' when no alert is shown. */
   text: ParseKeys | '';
   mode: 'success' | 'error' | 'info' | 'warning';
 }
