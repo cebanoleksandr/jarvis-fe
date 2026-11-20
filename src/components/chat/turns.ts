@@ -2,9 +2,11 @@ import type { ContentBlock, Message, ToolUseBlock } from '../../services';
 
 export type ToolStatus = 'running' | 'done' | 'error' | 'awaiting';
 
-export type AssistantPart =
+/** `messageId` lets confirmation cards render right after the message that proposed them. */
+export type AssistantPart = { messageId: string } & (
   | { type: 'text'; text: string }
-  | { type: 'tool'; id: string; name: string; status: ToolStatus };
+  | { type: 'tool'; id: string; name: string; status: ToolStatus }
+);
 
 export type Turn =
   | { kind: 'user'; id: string; text: string; createdAt: string }
@@ -57,10 +59,11 @@ export function buildTurns(messages: Message[]): Turn[] {
     const parts: AssistantPart[] = [];
     for (const b of m.content) {
       if (isText(b) && b.text.trim())
-        parts.push({ type: 'text', text: b.text });
+        parts.push({ messageId: m.id, type: 'text', text: b.text });
       else if (isToolUse(b)) {
         const err = results.get(b.id);
         parts.push({
+          messageId: m.id,
           type: 'tool',
           id: b.id,
           name: b.name,

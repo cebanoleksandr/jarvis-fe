@@ -12,11 +12,15 @@ import { queryKeys } from './keys';
  * Calendar events for a day range; today when `range` is omitted. On
  * `error.isGoogleReauthRequired` offer "Sign in with Google" again.
  */
-export function useCalendarEvents(range?: DateRange) {
+export function useCalendarEvents(
+  range?: DateRange,
+  options: { enabled?: boolean } = {},
+) {
   return useQuery({
     queryKey: queryKeys.calendarEvents(range?.from, range?.to),
     queryFn: () => googleService.events(range),
     staleTime: 60_000,
+    enabled: options.enabled,
   });
 }
 

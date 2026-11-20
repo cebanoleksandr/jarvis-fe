@@ -93,6 +93,53 @@
     "dismissed": "Descartado",
     "confirm": "Confirmar",
     "cancel": "Cancelar",
-    "awaiting": "Pendiente de confirmación"
+    "awaiting": "Pendiente de confirmación",
+    "provisional": "Provisional",
+    "edit": "Editar",
+    "viewInCalendar": "Ver en Google Calendar",
+    "openInTasks": "Abrir en Google Tasks",
+    "resolvedAt": "a las {{time}}"
+  },
+  "field": {
+    "title": "Título",
+    "when": "Fecha y hora",
+    "location": "Lugar",
+    "description": "Descripción",
+    "due": "Vencimiento",
+    "notes": "Notas",
+    "startDate": "Fecha de inicio",
+    "startTime": "Hora de inicio",
+    "endDate": "Fecha de fin",
+    "endTime": "Hora de fin",
+    "allDay": "Todo el día"
+  },
+  "timeline": {
+    "title": "{{day}} · {{from}} – {{to}}",
+    "noConflict": "Sin conflictos",
+    "conflict_one": "Coincide con {{count}} evento",
+    "conflict_many": "Coincide con {{count}} eventos",
+    "conflict_other": "Coincide con {{count}} eventos",
+    "proposed": "Propuesta",
+    "unavailable": "No se pudo cargar tu calendario para este día.",
+    "loading": "Revisando tu calendario…",
+    "allDayEvents_one": "+ {{count}} evento de todo el día",
+    "allDayEvents_many": "+ {{count}} eventos de todo el día",
+    "allDayEvents_other": "+ {{count}} eventos de todo el día"
+  },
+  "edit": {
+    "title": "Editar detalles",
+    "save": "Guardar y confirmar",
+    "cancel": "Cancelar",
+    "required": "Obligatorio",
+    "tooLong": "Demasiado largo",
+    "endAfterStart": "El fin debe ser posterior al inicio"
+  },
+  "chatDay": {
+    "today": "Hoy",
+    "yesterday": "Ayer"
+  },
+  "toolTitle": {
+    "create_event": "Crear evento en el calendario",
+    "create_task": "Crear tarea"
   }
 }

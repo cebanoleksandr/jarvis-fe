@@ -12,3 +12,18 @@ export function formatTime(iso: string, language: string, timeZone?: string) {
     return new Intl.DateTimeFormat(language, opts).format(new Date(iso));
   }
 }
+
+/** `YYYY-MM-DD` of an instant in the given timezone. */
+export function dayKey(iso: string | Date, timeZone?: string) {
+  const opts: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  const date = typeof iso === 'string' ? new Date(iso) : iso;
+  try {
+    return new Intl.DateTimeFormat('en-CA', { ...opts, timeZone }).format(date);
+  } catch {
+    return new Intl.DateTimeFormat('en-CA', opts).format(date);
+  }
+}

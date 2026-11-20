@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 
@@ -19,7 +19,8 @@ import { colors } from '../../theme';
 import { ActionCard } from './ActionCard';
 import { ChatComposer } from './ChatComposer';
 import { ChatEmptyState } from './ChatEmptyState';
-import { AssistantTurn, LiveTurn, UserBubble } from './ChatTurns';
+import { AssistantTurn, DaySeparator, LiveTurn, UserBubble } from './ChatTurns';
+import { dayKey } from './format';
 import { buildTurns } from './turns';
 
 /** Router state used to hand the first message over from the "new chat" screen. */
@@ -46,19 +47,20 @@ export function ChatView({ conversationId }: { conversationId: string }) {
 
   const turns = useMemo(() => buildTurns(messages.data ?? []), [messages.data]);
 
-  // Cards hang under the assistant turn that proposed them; cards whose
+  // Cards hang under the assistant message that proposed them; cards whose
   // message is not loaded yet (mid-stream) go under the live reply.
-  const { byTurn, loose } = useMemo(() => {
-    const byTurn = new Map<string, PendingAction[]>();
+  const { byMessage, loose } = useMemo(() => {
+    const shown = new Set(
+      turns.flatMap((tr) => (tr.kind === 'assistant' ? tr.messageIds : [])),
+    );
+    const byMessage = new Map<string, PendingAction[]>();
     const loose: PendingAction[] = [];
     for (const a of actions) {
-      const turn = turns.find(
-        (tr) => tr.kind === 'assistant' && tr.messageIds.includes(a.messageId),
-      );
-      if (turn) byTurn.set(turn.id, [...(byTurn.get(turn.id) ?? []), a]);
-      else loose.push(a);
+      if (shown.has(a.messageId)) {
+        byMessage.set(a.messageId, [...(byMessage.get(a.messageId) ?? []), a]);
+      } else loose.push(a);
     }
-    return { byTurn, loose };
+    return { byMessage, loose };
   }, [actions, turns]);
 
   // First message typed on the "new chat" screen.
@@ -86,7 +88,7 @@ export function ChatView({ conversationId }: { conversationId: string }) {
         key={a.id}
         action={a}
         busy={state.isStreaming}
-        onConfirm={() => void confirm(a.id)}
+        onConfirm={(args) => void confirm(a.id, args)}
         onCancel={() => void cancel(a.id)}
       />
     ));
@@ -164,15 +166,31 @@ export function ChatView({ conversationId }: { conversationId: string }) {
           gap: 4,
         }}
       >
-        {turns.map((turn) =>
-          turn.kind === 'user' ? (
-            <UserBubble key={turn.id} turn={turn} timeZone={user?.timezone} />
-          ) : (
-            <AssistantTurn key={turn.id} turn={turn}>
-              {renderCards(byTurn.get(turn.id) ?? [])}
-            </AssistantTurn>
-          ),
-        )}
+        {turns.map((turn, i) => {
+          // A separator wherever the day changes (in the user's timezone).
+          const newDay =
+            i === 0 ||
+            dayKey(turn.createdAt, user?.timezone) !==
+              dayKey(turns[i - 1].createdAt, user?.timezone);
+          return (
+            <Fragment key={turn.id}>
+              {newDay && (
+                <DaySeparator at={turn.createdAt} timeZone={user?.timezone} />
+              )}
+              {turn.kind === 'user' ? (
+                <UserBubble turn={turn} timeZone={user?.timezone} />
+              ) : (
+                <AssistantTurn
+                  turn={turn}
+                  timeZone={user?.timezone}
+                  renderAfter={(messageId) =>
+                    renderCards(byMessage.get(messageId) ?? [])
+                  }
+                />
+              )}
+            </Fragment>
+          );
+        })}
         {(showLive || loose.length > 0 || waitingForBriefing) && (
           <LiveTurn
             text={state.text}

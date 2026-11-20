@@ -95,6 +95,55 @@
     "dismissed": "Отклонено",
     "confirm": "Подтвердить",
     "cancel": "Отменить",
-    "awaiting": "Ожидает подтверждения"
+    "awaiting": "Ожидает подтверждения",
+    "provisional": "Черновик",
+    "edit": "Изменить",
+    "viewInCalendar": "Открыть в Google Calendar",
+    "openInTasks": "Открыть в Google Tasks",
+    "resolvedAt": "в {{time}}"
+  },
+  "field": {
+    "title": "Название",
+    "when": "Дата и время",
+    "location": "Место",
+    "description": "Описание",
+    "due": "Срок",
+    "notes": "Заметки",
+    "startDate": "Дата начала",
+    "startTime": "Время начала",
+    "endDate": "Дата окончания",
+    "endTime": "Время окончания",
+    "allDay": "Весь день"
+  },
+  "timeline": {
+    "title": "{{day}} · {{from}} – {{to}}",
+    "noConflict": "Конфликтов нет",
+    "conflict_one": "Пересекается с {{count}} событием",
+    "conflict_few": "Пересекается с {{count}} событиями",
+    "conflict_many": "Пересекается с {{count}} событиями",
+    "conflict_other": "Пересекается с {{count}} событиями",
+    "proposed": "Предложение",
+    "unavailable": "Не удалось загрузить календарь на этот день.",
+    "loading": "Проверяю календарь…",
+    "allDayEvents_one": "+ {{count}} событие на весь день",
+    "allDayEvents_few": "+ {{count}} события на весь день",
+    "allDayEvents_many": "+ {{count}} событий на весь день",
+    "allDayEvents_other": "+ {{count}} события на весь день"
+  },
+  "edit": {
+    "title": "Изменить детали",
+    "save": "Сохранить и подтвердить",
+    "cancel": "Отмена",
+    "required": "Обязательное поле",
+    "tooLong": "Слишком длинно",
+    "endAfterStart": "Окончание должно быть позже начала"
+  },
+  "chatDay": {
+    "today": "Сегодня",
+    "yesterday": "Вчера"
+  },
+  "toolTitle": {
+    "create_event": "Создать событие в календаре",
+    "create_task": "Создать задачу"
   }
 }

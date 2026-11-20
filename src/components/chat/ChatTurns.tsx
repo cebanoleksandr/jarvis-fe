@@ -1,13 +1,15 @@
-import type { ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Box from '@mui/material/Box';
 import { alpha, keyframes } from '@mui/material/styles';
+import DoneIcon from '@mui/icons-material/Done';
 
 import type { StreamToolCall } from '../../queries';
+import { APP_NAME } from '../../constants';
 import { colors, fonts } from '../../theme';
 import { AssistantAvatar } from './AssistantAvatar';
-import { formatTime } from './format';
+import { dayKey, formatTime } from './format';
 import { Markdown } from './Markdown';
 import { ToolChip } from './ToolChip';
 import type { AssistantPart, Turn } from './turns';
@@ -54,8 +56,21 @@ export function UserBubble({
         >
           {turn.text}
         </Box>
-        <Box sx={{ ...monoMeta, pt: 1, textAlign: 'right' }}>
+        <Box
+          sx={{
+            ...monoMeta,
+            pt: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end',
+            gap: '6px',
+          }}
+        >
           {formatTime(turn.createdAt, i18n.language, timeZone)}
+          {/* Saved on the server (no longer the optimistic copy). */}
+          {!turn.id.startsWith('optimistic-') && (
+            <DoneIcon sx={{ fontSize: 12, color: colors.accentText }} />
+          )}
         </Box>
       </Box>
     </Box>
@@ -96,9 +111,22 @@ function Chips({ children }: { children: ReactNode }) {
   );
 }
 
-/** Text and tool chips in their original order; neighbouring chips share a row. */
-function Parts({ parts }: { parts: AssistantPart[] }) {
+/**
+ * Text and tool chips in their original order; neighbouring chips share a
+ * row. `after(messageId)` is placed right after that message's parts, so a
+ * confirmation card sits under the call that proposed it.
+ */
+function Parts({
+  parts,
+  messageIds,
+  after,
+}: {
+  parts: AssistantPart[];
+  messageIds: string[];
+  after?: (messageId: string) => ReactNode;
+}) {
   const out: ReactNode[] = [];
+  const placed = new Set<string>();
   let chips: AssistantPart[] = [];
   const flush = () => {
     if (!chips.length) return;
@@ -114,35 +142,65 @@ function Parts({ parts }: { parts: AssistantPart[] }) {
     );
     chips = [];
   };
-  for (const p of parts) {
+  const place = (messageId: string) => {
+    flush();
+    placed.add(messageId);
+    const node = after?.(messageId);
+    if (node) out.push(<Fragment key={`after-${messageId}`}>{node}</Fragment>);
+  };
+  parts.forEach((p, i) => {
     if (p.type === 'tool') chips.push(p);
     else {
       flush();
       out.push(<Markdown key={`text-${out.length}`}>{p.text}</Markdown>);
     }
-  }
+    if (parts[i + 1]?.messageId !== p.messageId) place(p.messageId);
+  });
   flush();
+  // Messages without visible parts still get their cards.
+  for (const id of messageIds) if (!placed.has(id)) place(id);
   return <>{out}</>;
 }
 
 export function AssistantTurn({
   turn,
-  children,
+  timeZone,
+  renderAfter,
 }: {
   turn: Extract<Turn, { kind: 'assistant' }>;
-  /** Confirmation cards that belong to this turn. */
-  children?: ReactNode;
+  timeZone?: string;
+  /** Rendered after each message of the turn (its confirmation cards). */
+  renderAfter?: (messageId: string) => ReactNode;
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   return (
     <AssistantRow>
-      <Parts parts={turn.parts} />
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: -0.5 }}>
+        <Box
+          component="span"
+          sx={{
+            fontWeight: 600,
+            fontSize: 14,
+            lineHeight: '18px',
+            color: colors.text,
+          }}
+        >
+          {APP_NAME}
+        </Box>
+        <Box component="span" sx={monoMeta}>
+          {formatTime(turn.createdAt, i18n.language, timeZone)}
+        </Box>
+      </Box>
+      <Parts
+        parts={turn.parts}
+        messageIds={turn.messageIds}
+        after={renderAfter}
+      />
       {turn.stopReason === 'aborted' && (
         <Box component="span" sx={monoMeta}>
           {t('chat.stopped')}
         </Box>
       )}
-      {children}
     </AssistantRow>
   );
 }
@@ -190,5 +248,49 @@ export function LiveTurn({
       )}
       {children}
     </AssistantRow>
+  );
+}
+
+/** `TODAY · 14:01` rule between turns from different days. */
+export function DaySeparator({
+  at,
+  timeZone,
+}: {
+  at: string;
+  timeZone?: string;
+}) {
+  const { t, i18n } = useTranslation();
+  const key = dayKey(at, timeZone);
+  const now = new Date();
+  const label =
+    key === dayKey(now, timeZone)
+      ? t('chatDay.today')
+      : key === dayKey(new Date(now.getTime() - 86_400_000), timeZone)
+        ? t('chatDay.yesterday')
+        : new Intl.DateTimeFormat(i18n.language, {
+            weekday: 'short',
+            day: 'numeric',
+            month: 'short',
+            timeZone: 'UTC',
+          }).format(new Date(`${key}T00:00:00Z`));
+
+  return (
+    <Box
+      role="separator"
+      sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 0.5 }}
+    >
+      <Box
+        sx={{ flex: 1, height: '1px', bgcolor: alpha(colors.outline, 0.2) }}
+      />
+      <Box
+        component="span"
+        sx={{ ...monoMeta, letterSpacing: '1px', textTransform: 'uppercase' }}
+      >
+        {label} · {formatTime(at, i18n.language, timeZone)}
+      </Box>
+      <Box
+        sx={{ flex: 1, height: '1px', bgcolor: alpha(colors.outline, 0.2) }}
+      />
+    </Box>
   );
 }

@@ -95,6 +95,55 @@
     "dismissed": "Odrzucono",
     "confirm": "Zatwierdź",
     "cancel": "Anuluj",
-    "awaiting": "Czeka na zatwierdzenie"
+    "awaiting": "Czeka na zatwierdzenie",
+    "provisional": "Wstępne",
+    "edit": "Edytuj",
+    "viewInCalendar": "Otwórz w Google Calendar",
+    "openInTasks": "Otwórz w Google Tasks",
+    "resolvedAt": "o {{time}}"
+  },
+  "field": {
+    "title": "Tytuł",
+    "when": "Data i godzina",
+    "location": "Miejsce",
+    "description": "Opis",
+    "due": "Termin",
+    "notes": "Notatki",
+    "startDate": "Data rozpoczęcia",
+    "startTime": "Godzina rozpoczęcia",
+    "endDate": "Data zakończenia",
+    "endTime": "Godzina zakończenia",
+    "allDay": "Cały dzień"
+  },
+  "timeline": {
+    "title": "{{day}} · {{from}} – {{to}}",
+    "noConflict": "Brak konfliktów",
+    "conflict_one": "Koliduje z {{count}} wydarzeniem",
+    "conflict_few": "Koliduje z {{count}} wydarzeniami",
+    "conflict_many": "Koliduje z {{count}} wydarzeniami",
+    "conflict_other": "Koliduje z {{count}} wydarzenia",
+    "proposed": "Propozycja",
+    "unavailable": "Nie udało się wczytać kalendarza na ten dzień.",
+    "loading": "Sprawdzam kalendarz…",
+    "allDayEvents_one": "+ {{count}} wydarzenie całodniowe",
+    "allDayEvents_few": "+ {{count}} wydarzenia całodniowe",
+    "allDayEvents_many": "+ {{count}} wydarzeń całodniowych",
+    "allDayEvents_other": "+ {{count}} wydarzenia całodniowego"
+  },
+  "edit": {
+    "title": "Edytuj szczegóły",
+    "save": "Zapisz i zatwierdź",
+    "cancel": "Anuluj",
+    "required": "Pole wymagane",
+    "tooLong": "Za długie",
+    "endAfterStart": "Koniec musi być po początku"
+  },
+  "chatDay": {
+    "today": "Dzisiaj",
+    "yesterday": "Wczoraj"
+  },
+  "toolTitle": {
+    "create_event": "Utwórz wydarzenie w kalendarzu",
+    "create_task": "Utwórz zadanie"
   }
 }

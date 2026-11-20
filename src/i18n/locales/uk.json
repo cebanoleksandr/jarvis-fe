@@ -95,6 +95,55 @@
     "dismissed": "Відхилено",
     "confirm": "Підтвердити",
     "cancel": "Скасувати",
-    "awaiting": "Очікує підтвердження"
+    "awaiting": "Очікує підтвердження",
+    "provisional": "Чернетка",
+    "edit": "Змінити",
+    "viewInCalendar": "Відкрити в Google Calendar",
+    "openInTasks": "Відкрити в Google Tasks",
+    "resolvedAt": "о {{time}}"
+  },
+  "field": {
+    "title": "Назва",
+    "when": "Дата й час",
+    "location": "Місце",
+    "description": "Опис",
+    "due": "Термін",
+    "notes": "Нотатки",
+    "startDate": "Дата початку",
+    "startTime": "Час початку",
+    "endDate": "Дата завершення",
+    "endTime": "Час завершення",
+    "allDay": "Увесь день"
+  },
+  "timeline": {
+    "title": "{{day}} · {{from}} – {{to}}",
+    "noConflict": "Конфліктів немає",
+    "conflict_one": "Перетинається з {{count}} подією",
+    "conflict_few": "Перетинається з {{count}} подіями",
+    "conflict_many": "Перетинається з {{count}} подіями",
+    "conflict_other": "Перетинається з {{count}} подіями",
+    "proposed": "Пропозиція",
+    "unavailable": "Не вдалося завантажити календар на цей день.",
+    "loading": "Перевіряю календар…",
+    "allDayEvents_one": "+ {{count}} подія на весь день",
+    "allDayEvents_few": "+ {{count}} події на весь день",
+    "allDayEvents_many": "+ {{count}} подій на весь день",
+    "allDayEvents_other": "+ {{count}} події на весь день"
+  },
+  "edit": {
+    "title": "Змінити деталі",
+    "save": "Зберегти й підтвердити",
+    "cancel": "Скасувати",
+    "required": "Обов'язкове поле",
+    "tooLong": "Занадто довго",
+    "endAfterStart": "Кінець має бути пізніше за початок"
+  },
+  "chatDay": {
+    "today": "Сьогодні",
+    "yesterday": "Учора"
+  },
+  "toolTitle": {
+    "create_event": "Створити подію в календарі",
+    "create_task": "Створити задачу"
   }
 }

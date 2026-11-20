@@ -91,6 +91,51 @@
     "dismissed": "Dismissed",
     "confirm": "Confirm",
     "cancel": "Cancel",
-    "awaiting": "Awaiting confirmation"
+    "awaiting": "Awaiting confirmation",
+    "provisional": "Provisional",
+    "edit": "Edit",
+    "viewInCalendar": "View in Google Calendar",
+    "openInTasks": "Open in Google Tasks",
+    "resolvedAt": "at {{time}}"
+  },
+  "field": {
+    "title": "Title",
+    "when": "Date & time",
+    "location": "Location",
+    "description": "Description",
+    "due": "Due",
+    "notes": "Notes",
+    "startDate": "Start date",
+    "startTime": "Start time",
+    "endDate": "End date",
+    "endTime": "End time",
+    "allDay": "All day"
+  },
+  "timeline": {
+    "title": "{{day}} · {{from}} – {{to}}",
+    "noConflict": "No conflict detected",
+    "conflict_one": "Overlaps {{count}} event",
+    "conflict_other": "Overlaps {{count}} events",
+    "proposed": "Proposed",
+    "unavailable": "Couldn't load your calendar for this day.",
+    "loading": "Checking your calendar…",
+    "allDayEvents_one": "+ {{count}} all-day event",
+    "allDayEvents_other": "+ {{count}} all-day events"
+  },
+  "edit": {
+    "title": "Edit details",
+    "save": "Save & confirm",
+    "cancel": "Cancel",
+    "required": "Required",
+    "tooLong": "Too long",
+    "endAfterStart": "End must be after the start"
+  },
+  "chatDay": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  },
+  "toolTitle": {
+    "create_event": "Create calendar event",
+    "create_task": "Create task"
   }
 }

@@ -1,4 +1,6 @@
+import { useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
@@ -6,10 +8,28 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { alpha } from '@mui/material/styles';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
+import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
+import ShortTextIcon from '@mui/icons-material/ShortText';
+import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 
+import { useCurrentUser } from '../../queries';
 import type { PendingAction } from '../../services';
 import { colors, fonts, palette, radius } from '../../theme';
 import { StatusDot } from '../ui/StatusDot';
+import { ActionEditPopup } from './ActionEditPopup';
+import { ActionTimeline } from './ActionTimeline';
+import {
+  eventArgs,
+  formatDay,
+  formatEventWhen,
+  isAllDay,
+  taskArgs,
+} from './actionArgs';
+import { formatTime } from './format';
 
 const CYAN = palette.primary.base;
 
@@ -21,31 +41,136 @@ const mono = {
   letterSpacing: '0.6px',
 } as const;
 
+interface Field {
+  key: string;
+  label: string;
+  value: string;
+  icon?: ReactNode;
+  /** Spans both columns (long text). */
+  wide?: boolean;
+}
+
+const icon = (Icon: typeof ShortTextIcon) => (
+  <Icon sx={{ fontSize: 14, color: colors.accentText }} />
+);
+
+/**
+ * Title and fields of the card. Known tools are shown from their arguments,
+ * localized and formatted; anything else falls back to the backend summary.
+ */
+function describe(
+  action: PendingAction,
+  t: TFunction,
+  language: string,
+): { title: string; fields: Field[] } {
+  const event = eventArgs(action);
+  if (event) {
+    return {
+      title: t('toolTitle.create_event'),
+      fields: [
+        {
+          key: 'title',
+          label: t('field.title'),
+          value: event.title,
+          icon: icon(ShortTextIcon),
+        },
+        {
+          key: 'when',
+          label: t('field.when'),
+          value: formatEventWhen(event, language),
+          icon: icon(EventOutlinedIcon),
+        },
+        ...(event.location
+          ? [
+              {
+                key: 'location',
+                label: t('field.location'),
+                value: event.location,
+                icon: icon(PlaceOutlinedIcon),
+              },
+            ]
+          : []),
+        ...(event.description
+          ? [
+              {
+                key: 'description',
+                label: t('field.description'),
+                value: event.description,
+                icon: icon(NotesOutlinedIcon),
+                wide: true,
+              },
+            ]
+          : []),
+      ],
+    };
+  }
+
+  const task = taskArgs(action);
+  if (task) {
+    return {
+      title: t('toolTitle.create_task'),
+      fields: [
+        {
+          key: 'title',
+          label: t('field.title'),
+          value: task.title,
+          icon: icon(ShortTextIcon),
+        },
+        ...(task.due
+          ? [
+              {
+                key: 'due',
+                label: t('field.due'),
+                value: formatDay(task.due, language),
+                icon: icon(EventOutlinedIcon),
+              },
+            ]
+          : []),
+        ...(task.notes
+          ? [
+              {
+                key: 'notes',
+                label: t('field.notes'),
+                value: task.notes,
+                icon: icon(NotesOutlinedIcon),
+                wide: true,
+              },
+            ]
+          : []),
+      ],
+    };
+  }
+
+  const details =
+    action.summary?.details ??
+    Object.fromEntries(
+      Object.entries(action.args).map(([k, v]) => [
+        k,
+        typeof v === 'string' ? v : JSON.stringify(v),
+      ]),
+    );
+  return {
+    title: action.summary?.title ?? action.tool,
+    fields: Object.entries(details).map(([label, value]) => ({
+      key: label,
+      label,
+      value,
+    })),
+  };
+}
+
 interface ActionCardProps {
   action: PendingAction;
-  onConfirm: () => void;
+  /** Pass `args` only when the user edited them. */
+  onConfirm: (args?: Record<string, unknown>) => void;
   onCancel: () => void;
   /** True while any reply streams: one decision at a time. */
   busy: boolean;
 }
 
-/** What the card shows: the tool's own summary, or its raw arguments as a fallback. */
-function describe(action: PendingAction) {
-  if (action.summary) return action.summary;
-  return {
-    title: action.tool,
-    details: Object.fromEntries(
-      Object.entries(action.args).map(([k, v]) => [
-        k,
-        typeof v === 'string' ? v : JSON.stringify(v),
-      ]),
-    ),
-  };
-}
-
 /**
  * Confirmation card for a mutating tool call. Nothing runs until the user
- * presses Confirm; afterwards the card collapses into a resolved line.
+ * presses Confirm (or saves an edit); afterwards it collapses into a resolved line.
  */
 export function ActionCard({
   action,
@@ -53,14 +178,18 @@ export function ActionCard({
   onCancel,
   busy,
 }: ActionCardProps) {
-  const { t } = useTranslation();
-  const { title, details } = describe(action);
+  const { t, i18n } = useTranslation();
+  const [editing, setEditing] = useState(false);
+  const { title, fields } = describe(action, t, i18n.language);
 
   if (action.status !== 'pending' && action.status !== 'executing') {
-    return <ResolvedAction action={action} title={title} details={details} />;
+    return <ResolvedAction action={action} title={title} fields={fields} />;
   }
 
   const executing = action.status === 'executing';
+  const event = eventArgs(action);
+  const task = taskArgs(action);
+  const editable = Boolean(event || task);
 
   return (
     <Box
@@ -85,32 +214,52 @@ export function ActionCard({
         sx={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'space-between',
           gap: 1,
           pb: '5px',
           borderBottom: `1px solid ${alpha(colors.outline, 0.3)}`,
         }}
       >
-        {executing ? (
-          <CircularProgress
-            size={10}
-            thickness={6}
-            sx={{ color: colors.warning }}
-          />
-        ) : (
-          <StatusDot color={colors.warning} size={10} glow />
-        )}
         <Box
-          component="span"
-          sx={{
-            ...mono,
-            fontWeight: 600,
-            letterSpacing: '0.5px',
-            textTransform: 'uppercase',
-            color: colors.warning,
-          }}
+          sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}
         >
-          {executing ? t('action.executing') : t('action.required')}
+          {executing ? (
+            <CircularProgress
+              size={10}
+              thickness={6}
+              sx={{ color: colors.warning }}
+            />
+          ) : (
+            <StatusDot color={colors.warning} size={10} glow />
+          )}
+          <Box
+            component="span"
+            sx={{
+              ...mono,
+              fontWeight: 600,
+              letterSpacing: '0.5px',
+              textTransform: 'uppercase',
+              color: colors.warning,
+            }}
+          >
+            {executing ? t('action.executing') : t('action.required')}
+          </Box>
         </Box>
+        {!executing && (
+          <Box
+            sx={{
+              ...mono,
+              flexShrink: 0,
+              display: { xs: 'none', sm: 'flex' },
+              alignItems: 'center',
+              gap: '6px',
+              color: alpha(colors.textSecondary, 0.7),
+            }}
+          >
+            <ScheduleOutlinedIcon sx={{ fontSize: 12 }} />
+            {t('action.provisional')}
+          </Box>
+        )}
       </Box>
 
       <Box
@@ -127,7 +276,7 @@ export function ActionCard({
         {title}
       </Box>
 
-      {Object.keys(details).length > 0 && (
+      {fields.length > 0 && (
         <Box
           component="dl"
           sx={{
@@ -141,8 +290,11 @@ export function ActionCard({
             border: `1px solid ${alpha(colors.outline, 0.3)}`,
           }}
         >
-          {Object.entries(details).map(([label, value]) => (
-            <Box key={label} sx={{ minWidth: 0 }}>
+          {fields.map((f) => (
+            <Box
+              key={f.key}
+              sx={{ minWidth: 0, gridColumn: f.wide ? '1 / -1' : undefined }}
+            >
               <Box
                 component="dt"
                 sx={{
@@ -151,13 +303,16 @@ export function ActionCard({
                   color: alpha(colors.textSecondary, 0.6),
                 }}
               >
-                {label}
+                {f.label}
               </Box>
               <Box
                 component="dd"
                 sx={{
                   m: 0,
                   mt: 0.5,
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 0.5,
                   fontWeight: 500,
                   fontSize: 14,
                   lineHeight: '18px',
@@ -166,12 +321,17 @@ export function ActionCard({
                   whiteSpace: 'pre-wrap',
                 }}
               >
-                {value}
+                {f.icon && (
+                  <Box sx={{ display: 'flex', pt: '2px' }}>{f.icon}</Box>
+                )}
+                {f.value}
               </Box>
             </Box>
           ))}
         </Box>
       )}
+
+      {event && !isAllDay(event) && <ActionTimeline args={event} />}
 
       <Box
         sx={{
@@ -183,32 +343,60 @@ export function ActionCard({
           borderTop: `1px solid ${alpha(colors.outline, 0.2)}`,
         }}
       >
-        <ButtonBase
-          onClick={onConfirm}
-          disabled={busy || executing}
-          sx={{
-            gap: 1,
-            px: 3,
-            py: '10px',
-            borderRadius: `${radius.md}px`,
-            bgcolor: CYAN,
-            color: colors.textOnAccent,
-            fontWeight: 600,
-            fontSize: 14,
-            lineHeight: '18px',
-            boxShadow: `0 0 16px -2px ${alpha(CYAN, 0.35)}`,
-            transition: 'background-color 150ms, opacity 150ms',
-            '&:hover': { bgcolor: colors.accentText },
-            '&.Mui-disabled': { opacity: 0.5 },
-            '&.Mui-focusVisible': {
-              outline: `2px solid ${CYAN}`,
-              outlineOffset: 2,
-            },
-          }}
-        >
-          <CheckIcon sx={{ fontSize: 16 }} />
-          {t('action.confirm')}
-        </ButtonBase>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <ButtonBase
+            onClick={() => onConfirm()}
+            disabled={busy || executing}
+            sx={{
+              gap: 1,
+              px: 3,
+              py: '10px',
+              borderRadius: `${radius.md}px`,
+              bgcolor: CYAN,
+              color: colors.textOnAccent,
+              fontWeight: 600,
+              fontSize: 14,
+              lineHeight: '18px',
+              boxShadow: `0 0 16px -2px ${alpha(CYAN, 0.35)}`,
+              transition: 'background-color 150ms, opacity 150ms',
+              '&:hover': { bgcolor: colors.accentText },
+              '&.Mui-disabled': { opacity: 0.5 },
+              '&.Mui-focusVisible': {
+                outline: `2px solid ${CYAN}`,
+                outlineOffset: 2,
+              },
+            }}
+          >
+            <CheckIcon sx={{ fontSize: 16 }} />
+            {t('action.confirm')}
+          </ButtonBase>
+          {editable && (
+            <ButtonBase
+              onClick={() => setEditing(true)}
+              disabled={busy || executing}
+              sx={{
+                gap: '6px',
+                px: '17px',
+                py: '11px',
+                borderRadius: `${radius.md}px`,
+                bgcolor: colors.surfaceContainer,
+                border: `1px solid ${alpha(colors.outline, 0.6)}`,
+                color: colors.text,
+                fontWeight: 500,
+                fontSize: 14,
+                lineHeight: '18px',
+                '&:hover': { bgcolor: colors.surfaceContainerHigh },
+                '&.Mui-disabled': { opacity: 0.5 },
+                '&.Mui-focusVisible': {
+                  outline: `2px solid ${alpha(CYAN, 0.5)}`,
+                },
+              }}
+            >
+              <TuneOutlinedIcon sx={{ fontSize: 14 }} />
+              {t('action.edit')}
+            </ButtonBase>
+          )}
+        </Box>
         <ButtonBase
           onClick={onCancel}
           disabled={busy || executing}
@@ -233,6 +421,19 @@ export function ActionCard({
           {t('action.cancel')}
         </ButtonBase>
       </Box>
+
+      {editable && (
+        <ActionEditPopup
+          isVisible={editing}
+          onClose={() => setEditing(false)}
+          event={event}
+          task={task}
+          onSubmit={(args) => {
+            setEditing(false);
+            onConfirm(args);
+          }}
+        />
+      )}
     </Box>
   );
 }
@@ -240,13 +441,14 @@ export function ActionCard({
 function ResolvedAction({
   action,
   title,
-  details,
+  fields,
 }: {
   action: PendingAction;
   title: string;
-  details: Record<string, string>;
+  fields: Field[];
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { data: user } = useCurrentUser();
   const { color, label } =
     action.status === 'executed'
       ? { color: colors.success, label: t('action.executed') }
@@ -255,6 +457,14 @@ function ResolvedAction({
         : action.status === 'dismissed'
           ? { color: colors.textMuted, label: t('action.dismissed') }
           : { color: colors.textMuted, label: t('action.cancelled') };
+
+  // create_event / create_task return a link to the new item.
+  const link =
+    action.status === 'executed' &&
+    action.result &&
+    typeof (action.result as { link?: unknown }).link === 'string'
+      ? (action.result as { link: string }).link
+      : null;
 
   return (
     <Box
@@ -281,6 +491,20 @@ function ResolvedAction({
         >
           {label}
         </Box>
+        {action.resolvedAt && (
+          <Box
+            component="span"
+            sx={{ ...mono, color: alpha(colors.textSecondary, 0.6) }}
+          >
+            {t('action.resolvedAt', {
+              time: formatTime(
+                action.resolvedAt,
+                i18n.language,
+                user?.timezone,
+              ),
+            })}
+          </Box>
+        )}
       </Box>
       <Box
         sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1 }}
@@ -296,15 +520,16 @@ function ResolvedAction({
         >
           {title}
         </Box>
-        {Object.values(details)
+        {fields
+          .filter((f) => !f.wide)
           .slice(0, 3)
-          .map((value) => (
+          .map((f) => (
             <Box
-              key={value}
+              key={f.key}
               component="span"
               sx={{
                 ...mono,
-                maxWidth: 260,
+                maxWidth: 280,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
@@ -316,10 +541,35 @@ function ResolvedAction({
                 color: colors.text,
               }}
             >
-              {value}
+              {f.value}
             </Box>
           ))}
       </Box>
+      {link && (
+        <Box
+          component="a"
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            ...mono,
+            fontSize: 11,
+            lineHeight: '14px',
+            alignSelf: 'flex-start',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.5,
+            color: colors.accentText,
+            textDecoration: 'none',
+            '&:hover': { textDecoration: 'underline' },
+          }}
+        >
+          {action.tool === 'create_task'
+            ? t('action.openInTasks')
+            : t('action.viewInCalendar')}
+          <OpenInNewIcon sx={{ fontSize: 11 }} />
+        </Box>
+      )}
       {action.status === 'failed' && action.error && (
         <Box
           component="p"
