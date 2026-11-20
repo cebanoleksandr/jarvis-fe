@@ -100,7 +100,11 @@
     "edit": "Edytuj",
     "viewInCalendar": "Otwórz w Google Calendar",
     "openInTasks": "Otwórz w Google Tasks",
-    "resolvedAt": "o {{time}}"
+    "resolvedAt": "o {{time}}",
+    "undo": "Cofnij",
+    "undone": "Cofnięto",
+    "undoFailed": "Nie udało się cofnąć: {{message}}",
+    "reauth": "Zaloguj się ponownie przez Google, aby kontynuować."
   },
   "field": {
     "title": "Tytuł",
@@ -113,7 +117,8 @@
     "startTime": "Godzina rozpoczęcia",
     "endDate": "Data zakończenia",
     "endTime": "Godzina zakończenia",
-    "allDay": "Cały dzień"
+    "allDay": "Cały dzień",
+    "reminder": "Przypomnienie"
   },
   "timeline": {
     "title": "{{day}} · {{from}} – {{to}}",
@@ -145,5 +150,21 @@
   "toolTitle": {
     "create_event": "Utwórz wydarzenie w kalendarzu",
     "create_task": "Utwórz zadanie"
+  },
+  "reminder": {
+    "default": "Domyślne kalendarza",
+    "atStart": "W chwili rozpoczęcia",
+    "minutes_one": "{{count}} minutę wcześniej",
+    "minutes_few": "{{count}} minuty wcześniej",
+    "minutes_many": "{{count}} minut wcześniej",
+    "minutes_other": "{{count}} minuty wcześniej",
+    "hours_one": "{{count}} godzinę wcześniej",
+    "hours_few": "{{count}} godziny wcześniej",
+    "hours_many": "{{count}} godzin wcześniej",
+    "hours_other": "{{count}} godziny wcześniej",
+    "days_one": "{{count}} dzień wcześniej",
+    "days_few": "{{count}} dni wcześniej",
+    "days_many": "{{count}} dni wcześniej",
+    "days_other": "{{count}} dnia wcześniej"
   }
 }

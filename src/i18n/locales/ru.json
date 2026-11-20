@@ -100,7 +100,11 @@
     "edit": "Изменить",
     "viewInCalendar": "Открыть в Google Calendar",
     "openInTasks": "Открыть в Google Tasks",
-    "resolvedAt": "в {{time}}"
+    "resolvedAt": "в {{time}}",
+    "undo": "Отменить действие",
+    "undone": "Отменено",
+    "undoFailed": "Не удалось отменить: {{message}}",
+    "reauth": "Войдите через Google ещё раз, чтобы продолжить."
   },
   "field": {
     "title": "Название",
@@ -113,7 +117,8 @@
     "startTime": "Время начала",
     "endDate": "Дата окончания",
     "endTime": "Время окончания",
-    "allDay": "Весь день"
+    "allDay": "Весь день",
+    "reminder": "Напоминание"
   },
   "timeline": {
     "title": "{{day}} · {{from}} – {{to}}",
@@ -145,5 +150,21 @@
   "toolTitle": {
     "create_event": "Создать событие в календаре",
     "create_task": "Создать задачу"
+  },
+  "reminder": {
+    "default": "Как в календаре",
+    "atStart": "В момент начала",
+    "minutes_one": "За {{count}} минуту",
+    "minutes_few": "За {{count}} минуты",
+    "minutes_many": "За {{count}} минут",
+    "minutes_other": "За {{count}} минуты",
+    "hours_one": "За {{count}} час",
+    "hours_few": "За {{count}} часа",
+    "hours_many": "За {{count}} часов",
+    "hours_other": "За {{count}} часа",
+    "days_one": "За {{count}} день",
+    "days_few": "За {{count}} дня",
+    "days_many": "За {{count}} дней",
+    "days_other": "За {{count}} дня"
   }
 }

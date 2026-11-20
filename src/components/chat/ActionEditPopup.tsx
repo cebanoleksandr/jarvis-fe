@@ -9,11 +9,18 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 
 import { colors } from '../../theme';
 import BasePopup from '../popups/BasePopup';
-import { type EventArgs, isAllDay, type TaskArgs } from './actionArgs';
+import {
+  type EventArgs,
+  formatReminder,
+  isAllDay,
+  REMINDER_PRESETS,
+  type TaskArgs,
+} from './actionArgs';
 
 // Limits mirror the backend schemas (create_event / create_task).
 const makeEventSchema = (t: TFunction) =>
@@ -57,6 +64,8 @@ const makeEventSchema = (t: TFunction) =>
         return !v || !p.startTime || v > p.startTime;
       }),
     location: yup.string().defined().max(500, t('edit.tooLong')),
+    /** '' = calendar default, otherwise minutes before the start. */
+    reminder: yup.string().defined(),
     description: yup.string().defined().max(4000, t('edit.tooLong')),
   });
 
@@ -174,10 +183,18 @@ function EventEditForm({
       endDate,
       endTime,
       location: args.location ?? '',
+      reminder:
+        args.reminderMinutes === undefined ? '' : String(args.reminderMinutes),
       description: args.description ?? '',
     },
   });
   const allDay = useWatch({ control, name: 'allDay' });
+  // Keep a value the assistant chose even if it is not one of the presets.
+  const reminderOptions =
+    args.reminderMinutes === undefined ||
+    REMINDER_PRESETS.includes(args.reminderMinutes)
+      ? REMINDER_PRESETS
+      : [...REMINDER_PRESETS, args.reminderMinutes].sort((a, b) => a - b);
 
   const submit = handleSubmit((v) =>
     onSubmit({
@@ -186,6 +203,7 @@ function EventEditForm({
       end: v.allDay ? v.endDate : `${v.endDate}T${v.endTime}`,
       // The backend schema is strict: leave out empty optional fields.
       ...(v.location.trim() ? { location: v.location.trim() } : {}),
+      ...(v.reminder !== '' ? { reminderMinutes: Number(v.reminder) } : {}),
       ...(v.description.trim() ? { description: v.description.trim() } : {}),
     }),
   );
@@ -283,6 +301,28 @@ function EventEditForm({
         helperText={errors.location?.message}
         fullWidth
         size="small"
+      />
+      <Controller
+        name="reminder"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            select
+            label={t('field.reminder')}
+            value={field.value}
+            onChange={field.onChange}
+            onBlur={field.onBlur}
+            size="small"
+            fullWidth
+          >
+            <MenuItem value="">{t('reminder.default')}</MenuItem>
+            {reminderOptions.map((m) => (
+              <MenuItem key={m} value={String(m)}>
+                {formatReminder(m, t)}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
       />
       <TextField
         label={t('field.description')}

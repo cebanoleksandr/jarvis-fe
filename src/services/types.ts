@@ -108,8 +108,15 @@ export interface Message {
   createdAt: string;
 }
 
+/** `undone`: executed, then reverted by the user with Undo. */
 export type PendingActionStatus =
-  'pending' | 'executing' | 'executed' | 'failed' | 'cancelled' | 'dismissed';
+  | 'pending'
+  | 'executing'
+  | 'executed'
+  | 'failed'
+  | 'cancelled'
+  | 'dismissed'
+  | 'undone';
 
 export interface ActionSummary {
   title: string;

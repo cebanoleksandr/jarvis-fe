@@ -8,6 +8,7 @@ export {
   useDeleteConversation,
   useMessages,
   usePendingActions,
+  useUndoAction,
 } from './conversations';
 export { useChatStream } from './chat-stream';
 export type { ChatStreamState, StreamToolCall } from './chat-stream';

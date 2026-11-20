@@ -4,6 +4,7 @@ import {
   chatService,
   pendingActionsService,
   type Conversation,
+  type PendingAction,
 } from '../services';
 import { patchCache, queryClient, rollback } from './query-client';
 import { queryKeys } from './keys';
@@ -74,5 +75,17 @@ export function usePendingActions(conversationId: string | undefined) {
     queryKey: queryKeys.pendingActions(conversationId ?? ''),
     queryFn: () => pendingActionsService.list(conversationId!),
     enabled: !!conversationId,
+  });
+}
+
+/** Undo on a resolved card: deletes what the action created in Google. */
+export function useUndoAction(conversationId: string) {
+  return useMutation({
+    mutationFn: (actionId: string) => pendingActionsService.undo(actionId),
+    onSuccess: (action) =>
+      queryClient.setQueryData<PendingAction[]>(
+        queryKeys.pendingActions(conversationId),
+        (old) => old?.map((a) => (a.id === action.id ? action : a)),
+      ),
   });
 }

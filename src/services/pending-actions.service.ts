@@ -33,4 +33,13 @@ export const pendingActionsService = {
   cancel(id: string, signal?: AbortSignal): AsyncGenerator<AgentEvent> {
     return streamAgent(`/pending-actions/${id}/cancel`, undefined, signal);
   },
+
+  /**
+   * Reverts an executed action (deletes the created event or task) and
+   * returns it with status `undone`. 409 when it cannot be undone or Google
+   * needs a new sign-in (`isGoogleReauthRequired`), 502 on other Google errors.
+   */
+  async undo(id: string): Promise<PendingAction> {
+    return (await api.post<PendingAction>(`/pending-actions/${id}/undo`)).data;
+  },
 };

@@ -10,13 +10,16 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import EventOutlinedIcon from '@mui/icons-material/EventOutlined';
 import NotesOutlinedIcon from '@mui/icons-material/NotesOutlined';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import UndoIcon from '@mui/icons-material/Undo';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
 import ScheduleOutlinedIcon from '@mui/icons-material/ScheduleOutlined';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';
 
-import { useCurrentUser } from '../../queries';
+import { useCurrentUser, useUndoAction } from '../../queries';
+import { ApiError } from '../../services';
 import type { PendingAction } from '../../services';
 import { colors, fonts, palette, radius } from '../../theme';
 import { StatusDot } from '../ui/StatusDot';
@@ -26,6 +29,7 @@ import {
   eventArgs,
   formatDay,
   formatEventWhen,
+  formatReminder,
   isAllDay,
   taskArgs,
 } from './actionArgs';
@@ -87,6 +91,16 @@ function describe(
                 label: t('field.location'),
                 value: event.location,
                 icon: icon(PlaceOutlinedIcon),
+              },
+            ]
+          : []),
+        ...(event.reminderMinutes !== undefined
+          ? [
+              {
+                key: 'reminder',
+                label: t('field.reminder'),
+                value: formatReminder(event.reminderMinutes, t),
+                icon: icon(NotificationsNoneOutlinedIcon),
               },
             ]
           : []),
@@ -449,6 +463,7 @@ function ResolvedAction({
 }) {
   const { t, i18n } = useTranslation();
   const { data: user } = useCurrentUser();
+  const undo = useUndoAction(action.conversationId);
   const { color, label } =
     action.status === 'executed'
       ? { color: colors.success, label: t('action.executed') }
@@ -456,7 +471,19 @@ function ResolvedAction({
         ? { color: colors.error, label: t('action.failed') }
         : action.status === 'dismissed'
           ? { color: colors.textMuted, label: t('action.dismissed') }
-          : { color: colors.textMuted, label: t('action.cancelled') };
+          : action.status === 'undone'
+            ? { color: colors.textMuted, label: t('action.undone') }
+            : { color: colors.textMuted, label: t('action.cancelled') };
+  // The backend can revert what these tools created.
+  const undoable =
+    action.status === 'executed' &&
+    (action.tool === 'create_event' || action.tool === 'create_task');
+  const undoError =
+    undo.error instanceof ApiError && undo.error.isGoogleReauthRequired
+      ? t('action.reauth')
+      : undo.error
+        ? t('action.undoFailed', { message: undo.error.message })
+        : null;
 
   // create_event / create_task return a link to the new item.
   const link =
@@ -545,29 +572,67 @@ function ResolvedAction({
             </Box>
           ))}
       </Box>
-      {link && (
+      {(link || undoable) && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {link && (
+            <Box
+              component="a"
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                ...mono,
+                fontSize: 11,
+                lineHeight: '14px',
+                alignSelf: 'flex-start',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.5,
+                color: colors.accentText,
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' },
+              }}
+            >
+              {action.tool === 'create_task'
+                ? t('action.openInTasks')
+                : t('action.viewInCalendar')}
+              <OpenInNewIcon sx={{ fontSize: 11 }} />
+            </Box>
+          )}
+          {undoable && (
+            <ButtonBase
+              onClick={() => undo.mutate(action.id)}
+              disabled={undo.isPending}
+              sx={{
+                ...mono,
+                fontSize: 11,
+                lineHeight: '14px',
+                gap: 0.5,
+                color: alpha(colors.textSecondary, 0.7),
+                '&:hover': { color: colors.text },
+                '&.Mui-disabled': { opacity: 0.5 },
+                '&.Mui-focusVisible': {
+                  outline: `2px solid ${alpha(CYAN, 0.5)}`,
+                },
+              }}
+            >
+              {undo.isPending ? (
+                <CircularProgress size={10} thickness={6} color="inherit" />
+              ) : (
+                <UndoIcon sx={{ fontSize: 12 }} />
+              )}
+              {t('action.undo')}
+            </ButtonBase>
+          )}
+        </Box>
+      )}
+      {undoError && (
         <Box
-          component="a"
-          href={link}
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{
-            ...mono,
-            fontSize: 11,
-            lineHeight: '14px',
-            alignSelf: 'flex-start',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 0.5,
-            color: colors.accentText,
-            textDecoration: 'none',
-            '&:hover': { textDecoration: 'underline' },
-          }}
+          component="p"
+          role="alert"
+          sx={{ m: 0, fontSize: 13, lineHeight: '18px', color: colors.error }}
         >
-          {action.tool === 'create_task'
-            ? t('action.openInTasks')
-            : t('action.viewInCalendar')}
-          <OpenInNewIcon sx={{ fontSize: 11 }} />
+          {undoError}
         </Box>
       )}
       {action.status === 'failed' && action.error && (

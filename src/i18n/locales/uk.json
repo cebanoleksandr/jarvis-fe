@@ -100,7 +100,11 @@
     "edit": "Змінити",
     "viewInCalendar": "Відкрити в Google Calendar",
     "openInTasks": "Відкрити в Google Tasks",
-    "resolvedAt": "о {{time}}"
+    "resolvedAt": "о {{time}}",
+    "undo": "Скасувати дію",
+    "undone": "Скасовано",
+    "undoFailed": "Не вдалося скасувати: {{message}}",
+    "reauth": "Увійдіть через Google ще раз, щоб продовжити."
   },
   "field": {
     "title": "Назва",
@@ -113,7 +117,8 @@
     "startTime": "Час початку",
     "endDate": "Дата завершення",
     "endTime": "Час завершення",
-    "allDay": "Увесь день"
+    "allDay": "Увесь день",
+    "reminder": "Нагадування"
   },
   "timeline": {
     "title": "{{day}} · {{from}} – {{to}}",
@@ -145,5 +150,21 @@
   "toolTitle": {
     "create_event": "Створити подію в календарі",
     "create_task": "Створити задачу"
+  },
+  "reminder": {
+    "default": "Як у календарі",
+    "atStart": "У момент початку",
+    "minutes_one": "За {{count}} хвилину",
+    "minutes_few": "За {{count}} хвилини",
+    "minutes_many": "За {{count}} хвилин",
+    "minutes_other": "За {{count}} хвилини",
+    "hours_one": "За {{count}} годину",
+    "hours_few": "За {{count}} години",
+    "hours_many": "За {{count}} годин",
+    "hours_other": "За {{count}} години",
+    "days_one": "За {{count}} день",
+    "days_few": "За {{count}} дні",
+    "days_many": "За {{count}} днів",
+    "days_other": "За {{count}} дня"
   }
 }

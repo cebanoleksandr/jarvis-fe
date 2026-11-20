@@ -1,3 +1,5 @@
+import type { TFunction } from 'i18next';
+
 import type { PendingAction } from '../../services';
 
 /**
@@ -11,6 +13,8 @@ export interface EventArgs {
   end: string;
   location?: string;
   description?: string;
+  /** Popup reminder; absent means the calendar's default reminders. */
+  reminderMinutes?: number;
 }
 
 export interface TaskArgs {
@@ -23,7 +27,8 @@ const str = (v: unknown) => (typeof v === 'string' ? v : undefined);
 
 export function eventArgs(action: PendingAction): EventArgs | null {
   if (action.tool !== 'create_event') return null;
-  const { title, start, end, location, description } = action.args;
+  const { title, start, end, location, description, reminderMinutes } =
+    action.args;
   if (!str(title) || !str(start) || !str(end)) return null;
   return {
     title: title as string,
@@ -31,6 +36,8 @@ export function eventArgs(action: PendingAction): EventArgs | null {
     end: end as string,
     location: str(location),
     description: str(description),
+    reminderMinutes:
+      typeof reminderMinutes === 'number' ? reminderMinutes : undefined,
   };
 }
 
@@ -96,4 +103,16 @@ export function formatEventWhen(args: EventArgs, language: string) {
     return `${formatDay(sd, language)} · ${formatClock(st, language)} – ${formatClock(et, language)}`;
   }
   return `${formatDay(sd, language, 'short')}, ${formatClock(st, language)} – ${formatDay(ed, language, 'short')}, ${formatClock(et, language)}`;
+}
+
+/** Minutes before the start a reminder can be set to in the edit form. */
+export const REMINDER_PRESETS = [0, 5, 10, 15, 30, 60, 120, 1440];
+
+/** `15 minutes before`, `1 hour before`, `At start time`. */
+export function formatReminder(minutes: number, t: TFunction) {
+  if (minutes === 0) return t('reminder.atStart');
+  if (minutes % 1440 === 0)
+    return t('reminder.days', { count: minutes / 1440 });
+  if (minutes % 60 === 0) return t('reminder.hours', { count: minutes / 60 });
+  return t('reminder.minutes', { count: minutes });
 }

@@ -96,7 +96,11 @@
     "edit": "Edit",
     "viewInCalendar": "View in Google Calendar",
     "openInTasks": "Open in Google Tasks",
-    "resolvedAt": "at {{time}}"
+    "resolvedAt": "at {{time}}",
+    "undo": "Undo",
+    "undone": "Undone",
+    "undoFailed": "Couldn't undo: {{message}}",
+    "reauth": "Sign in with Google again to continue."
   },
   "field": {
     "title": "Title",
@@ -109,7 +113,8 @@
     "startTime": "Start time",
     "endDate": "End date",
     "endTime": "End time",
-    "allDay": "All day"
+    "allDay": "All day",
+    "reminder": "Reminder"
   },
   "timeline": {
     "title": "{{day}} · {{from}} – {{to}}",
@@ -137,5 +142,15 @@
   "toolTitle": {
     "create_event": "Create calendar event",
     "create_task": "Create task"
+  },
+  "reminder": {
+    "default": "Calendar default",
+    "atStart": "At start time",
+    "minutes_one": "{{count}} minute before",
+    "minutes_other": "{{count}} minutes before",
+    "hours_one": "{{count}} hour before",
+    "hours_other": "{{count}} hours before",
+    "days_one": "{{count}} day before",
+    "days_other": "{{count}} days before"
   }
 }
